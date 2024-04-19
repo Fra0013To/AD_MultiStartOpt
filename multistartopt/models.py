@@ -5,14 +5,14 @@ from multistartopt.layers import FunctionLayer
 
 class MultiStartOptimizationModel(tf.keras.models.Model):
     def __init__(self,
-                 function_to_minimize,
+                 function,
                  starting_pts,
                  dtype=tf.float32,
                  **kwargs
                  ):
         """
         Model initialization.
-        :param function_to_minimize: tensorflow function (better if vectorized for batches of inputs)
+        :param function: tensorflow function (better if vectorized for batches of inputs)
         :param starting_pts: numpy array N-by-n (N points in R^n)
         :param kwargs:
         """
@@ -21,9 +21,9 @@ class MultiStartOptimizationModel(tf.keras.models.Model):
         self._tf_dtype = dtype
         self._starting_pts = tf.cast(starting_pts, dtype=self._tf_dtype)
         self._N, self._n = starting_pts.shape
-        self._function_to_minimize = function_to_minimize
+        self._function = function
 
-        self._func_layer = FunctionLayer(units=self._N, activation=self._function_to_minimize, dtype=self._tf_dtype)
+        self._func_layer = FunctionLayer(units=self._N, activation=self._function, dtype=self._tf_dtype)
 
         self._fake_input = np.ones((1, self._n))
         self.call(self._fake_input)
@@ -36,7 +36,7 @@ class MultiStartOptimizationModel(tf.keras.models.Model):
         config['starting_pts'] = self._starting_pts
         config['N'] = self._N
         config['n'] = self._n
-        config['function_to_minimize'] = self._function_to_minimize
+        config['function'] = self._function
         config['func_layer'] = self._func_layer
         config['fake_input'] = self._fake_input
 

@@ -41,7 +41,7 @@ X0 = X0.T
 if use_mso_class:
     model = MSOModel(himmelblau, X0)
 else:
-    model = make_mso_model(n, himmelblau, X0)
+    model = make_mso_model(himmelblau, X0)
 
 adam_epsilon = 1e-7 / N
 OPTIMIZER = tf.keras.optimizers.Adam(epsilon=adam_epsilon)

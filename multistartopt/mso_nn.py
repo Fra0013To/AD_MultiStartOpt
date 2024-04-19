@@ -3,15 +3,16 @@ import numpy as np
 from multistartopt.layers import FunctionLayer
 
 
-def make_mso_model(n: int, function, starting_pts, name=None):
+def make_mso_model(function, starting_pts, dtype=tf.float32, name=None):
+    n = starting_pts.shape[-1]
 
-    I = tf.keras.layers.Input((n, ))
+    I = tf.keras.layers.Input((n, ), dtype=dtype)
 
-    W = starting_pts
+    W = starting_pts.astype(dtype.name)
 
-    D = FunctionLayer(W.shape[0], function)(I)
+    D = FunctionLayer(W.shape[0], function, dtype=dtype)(I)
 
-    model = tf.keras.models.Model(inputs=I, outputs=D, name=name)
+    model = tf.keras.models.Model(inputs=I, outputs=D, name=name, dtype=dtype)
 
     model.set_weights([W.T])
 
